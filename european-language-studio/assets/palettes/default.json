@@ -1,0 +1,10 @@
+{
+  "name": "default",
+  "description": "Harmonious, modern UI palette for color-coding vocabulary. High legibility in both light and dark themes.",
+  "colors": [
+    "#E74C3C", "#E67E22", "#F1C40F", "#2ECC71",
+    "#1ABC9C", "#3498DB", "#9B59B6", "#E91E63",
+    "#16A085", "#D35400", "#2980B9", "#8E44AD",
+    "#27AE60", "#C0392B", "#7F8C8D", "#34495E"
+  ]
+}

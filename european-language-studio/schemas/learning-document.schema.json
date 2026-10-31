@@ -1,0 +1,464 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://european-language-studio.local/schemas/learning-document.schema.json",
+  "title": "LearningDocument",
+  "description": "Top-level learning document for the european-language-studio skill. A rich study packet for an authentic European-language text: sentences with aligned translations, contextual vocabulary, expressions, grammar, exercises, and a QA record. All types are inlined for single-file validation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "meta",
+    "source",
+    "sentences",
+    "vocabulary",
+    "expressions",
+    "grammar",
+    "exercises",
+    "qa"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "2.0" },
+    "meta": { "$ref": "#/$defs/meta" },
+    "source": { "$ref": "#/$defs/source" },
+    "sentences": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/sentence" }
+    },
+    "vocabulary": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/vocabulary" }
+    },
+    "expressions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/expression" }
+    },
+    "grammar": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/grammarPoint" }
+    },
+    "exercises": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/exercise" }
+    },
+    "qa": { "$ref": "#/$defs/qa" }
+  },
+  "$defs": {
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "textLanguage",
+        "explanationLanguage",
+        "genre",
+        "mode",
+        "createdAt",
+        "level"
+      ],
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "textLanguage": {
+          "enum": ["en", "fr", "es", "de", "it", "pt", "nl", "sv", "no", "da"]
+        },
+        "explanationLanguage": {
+          "type": "string",
+          "minLength": 2,
+          "description": "BCP-47 tag or language name, e.g. 'en' (the default), 'zh-CN', 'es'."
+        },
+        "genre": {
+          "enum": [
+            "news", "article", "fiction", "dialogue", "email",
+            "social-media", "academic", "speech", "other"
+          ]
+        },
+        "mode": {
+          "enum": ["study", "compact", "cards", "exercise-sheet", "json"]
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "register": {
+          "type": "string",
+          "description": "Free-text description of the source register, e.g. 'neutral journalistic'."
+        },
+        "level": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["strategy"],
+          "properties": {
+            "strategy": { "enum": ["default-adaptive", "user-specified"] },
+            "declared": {
+              "type": ["string", "null"],
+              "description": "The learner's own words or stated level. Not an assessment by the skill."
+            }
+          }
+        },
+        "batch": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["index", "total"],
+          "properties": {
+            "index": { "type": "integer", "minimum": 1 },
+            "total": { "type": "integer", "minimum": 1 },
+            "paragraphRange": { "type": "string", "pattern": "^\\d+(?:-\\d+)?$" }
+          }
+        },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "characterCount", "sentenceCount", "integrity"],
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The source exactly as supplied, before segmentation."
+        },
+        "characterCount": { "type": "integer", "minimum": 1 },
+        "sentenceCount": { "type": "integer", "minimum": 1 },
+        "integrity": {
+          "enum": ["preserved", "whitespace-normalized", "modified-flag"],
+          "description": "preserved = verbatim; whitespace-normalized = only line endings/spacing changed; modified-flag = something else changed and is disclosed below."
+        },
+        "normalizationNotes": { "type": "array", "items": { "type": "string" } },
+        "copyrightNote": { "type": "string" }
+      }
+    },
+    "sentence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "paragraph", "text", "translation"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^s\\d{2,4}-\\d{2,4}$",
+          "description": "Absolute position: s<paragraph>-<sentence>, e.g. s01-03."
+        },
+        "paragraph": { "type": "integer", "minimum": 1 },
+        "order": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Reading order within the whole document. Optional; array order is authoritative."
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Verbatim source text, including punctuation and original glyphs."
+        },
+        "translation": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Natural translation into the explanation language."
+        },
+        "literal": {
+          "type": ["string", "null"],
+          "description": "Optional literal gloss illustrating the construction; never a substitute for translation."
+        },
+        "registerNote": { "type": "string" },
+        "notes": { "type": "array", "items": { "type": "string" } },
+        "vocabularyRefs": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^v\\d{3,4}$" }
+        },
+        "expressionRefs": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^e\\d{3,4}$" }
+        },
+        "grammarRefs": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^g\\d{3,4}$" }
+        }
+      }
+    },
+    "vocabulary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "surface", "lemma", "pos", "meaningInContext",
+        "sentenceRefs", "priority", "confidence", "needsVerification"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^v\\d{3,4}$" },
+        "surface": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Exact substring of the sentence, including inflection, elision, or clitics."
+        },
+        "lemma": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Dictionary citation form."
+        },
+        "pos": {
+          "enum": [
+            "noun", "verb", "adjective", "adverb", "pronoun", "determiner",
+            "article", "preposition", "conjunction", "interjection", "numeral",
+            "particle", "proper-noun", "phrase", "other"
+          ]
+        },
+        "meaningInContext": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One sense, as used in this sentence. Not a dictionary entry."
+        },
+        "morphology": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["description"],
+          "properties": {
+            "description": { "type": "string", "minLength": 1 },
+            "features": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "gender": {
+          "enum": ["masculine", "feminine", "neuter", "common", "not-applicable"]
+        },
+        "pronunciation": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ipa": { "type": "string" },
+            "note": { "type": "string" }
+          }
+        },
+        "collocations": { "type": "array", "items": { "type": "string" } },
+        "examples": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["text", "translation"],
+            "properties": {
+              "text": { "type": "string", "minLength": 1 },
+              "translation": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "commonErrors": { "type": "array", "items": { "type": "string" } },
+        "confusions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["term", "distinction"],
+            "properties": {
+              "term": { "type": "string", "minLength": 1 },
+              "distinction": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "sentenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "pattern": "^s\\d{2,4}-\\d{2,4}$" }
+        },
+        "priority": { "enum": ["high", "medium", "low"] },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "needsVerification": { "type": "boolean" },
+        "region": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Only when the usage is regionally restricted and evidenced."
+        },
+        "externalLevel": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "source"],
+          "description": "Level or frequency label stated by an external source. Never assigned by the skill itself.",
+          "properties": {
+            "value": { "type": "string" },
+            "source": { "type": "string" }
+          }
+        },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "expression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "text", "type", "meaningInContext", "register",
+        "sentenceRefs", "priority", "confidence", "needsVerification"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^e\\d{3,4}$" },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Verbatim span as it appears in the source, with the observed inflection."
+        },
+        "type": {
+          "enum": [
+            "collocation", "phrasal-verb", "idiom", "colloquialism",
+            "slang", "valency", "grammatical-expression"
+          ]
+        },
+        "literalMeaning": {
+          "type": "string",
+          "description": "Word-for-word reading. Required in substance for idioms and slang where it differs from the contextual meaning."
+        },
+        "meaningInContext": { "type": "string", "minLength": 1 },
+        "register": {
+          "enum": ["formal", "neutral", "informal", "colloquial", "vulgar", "literary", "archaic", "mixed"]
+        },
+        "region": { "type": "array", "items": { "type": "string" } },
+        "regionCertainty": {
+          "enum": ["verified", "probable", "unverified"],
+          "description": "Confidence in any regional claim. Use unverified rather than asserting."
+        },
+        "sensitivity": { "enum": ["none", "mild", "offensive", "slur"] },
+        "usageNotes": { "type": "array", "items": { "type": "string" } },
+        "examples": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["text", "translation"],
+            "properties": {
+              "text": { "type": "string", "minLength": 1 },
+              "translation": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "alternatives": { "type": "array", "items": { "type": "string" } },
+        "sentenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "pattern": "^s\\d{2,4}-\\d{2,4}$" }
+        },
+        "priority": { "enum": ["high", "medium", "low"] },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "needsVerification": { "type": "boolean" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "grammarPoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "title", "explanation", "sentenceRefs", "confidence", "needsVerification"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^g\\d{3,4}$" },
+        "title": { "type": "string", "minLength": 1 },
+        "explanation": { "type": "string", "minLength": 1 },
+        "pattern": { "type": "string" },
+        "examples": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["text", "translation"],
+            "properties": {
+              "text": { "type": "string", "minLength": 1 },
+              "translation": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "pitfalls": { "type": "array", "items": { "type": "string" } },
+        "sentenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "pattern": "^s\\d{2,4}-\\d{2,4}$" }
+        },
+        "priority": { "enum": ["high", "medium", "low"] },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "needsVerification": { "type": "boolean" },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "exercise": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "prompt", "answer", "difficulty"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^x\\d{3,4}$" },
+        "type": {
+          "enum": [
+            "meaning", "cloze", "collocation", "rewrite", "grammar-discrimination",
+            "translation", "imitation", "speaking-scenario", "recall-card"
+          ]
+        },
+        "prompt": { "type": "string", "minLength": 1 },
+        "options": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "string" }
+        },
+        "answer": {
+          "type": "object",
+          "additionalProperties": false,
+          "anyOf": [
+            { "required": ["key"] },
+            { "required": ["model"] },
+            { "required": ["rubric"] }
+          ],
+          "properties": {
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The single correct option/answer for closed items."
+            },
+            "model": {
+              "type": "string",
+              "minLength": 1,
+              "description": "A model answer for open items."
+            },
+            "rubric": {
+              "type": "array",
+              "minItems": 2,
+              "items": { "type": "string", "minLength": 1 },
+              "description": "At least two criteria for open production items."
+            },
+            "explanation": { "type": "string" }
+          }
+        },
+        "difficulty": { "enum": ["easy", "medium", "hard"] },
+        "relatedSentences": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^s\\d{2,4}-\\d{2,4}$" }
+        },
+        "relatedVocabulary": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^v\\d{3,4}$" }
+        },
+        "relatedExpressions": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^e\\d{3,4}$" }
+        },
+        "relatedGrammar": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^g\\d{3,4}$" }
+        },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "qa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["checks", "summary"],
+      "properties": {
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "name", "status"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^c\\d{2}$" },
+              "name": { "type": "string", "minLength": 1 },
+              "status": { "enum": ["pass", "fail", "unverified", "not-applicable"] },
+              "notes": { "type": "string" }
+            }
+          }
+        },
+        "summary": { "enum": ["pass", "pass-with-disclosures", "fail"] },
+        "validator": { "type": "string" },
+        "reviewedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

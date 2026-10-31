@@ -1,0 +1,341 @@
+{
+  "schemaVersion": "2.0",
+  "meta": {
+    "title": "La pluie sur la ville",
+    "textLanguage": "fr",
+    "explanationLanguage": "en",
+    "genre": "fiction",
+    "register": "neutral narrative",
+    "mode": "study",
+    "createdAt": "2026-10-27T16:30:00Z",
+    "level": {
+      "strategy": "default-adaptive"
+    }
+  },
+  "source": {
+    "text": "Ce matin, il pleuvait sur la ville. Les gens marchaient vite, cachés sous leurs parapluies. Malgré le mauvais temps, un vieux monsieur souriait dans sa boutique. « La pluie fait pousser les fleurs », disait-il souvent.",
+    "characterCount": 218,
+    "sentenceCount": 4,
+    "integrity": "preserved"
+  },
+  "sentences": [
+    {
+      "id": "s01-01",
+      "paragraph": 1,
+      "order": 1,
+      "text": "Ce matin, il pleuvait sur la ville.",
+      "translation": "This morning, it was raining over the city.",
+      "vocabularyRefs": ["v001"],
+      "grammarRefs": ["g001"]
+    },
+    {
+      "id": "s01-02",
+      "paragraph": 1,
+      "order": 2,
+      "text": "Les gens marchaient vite, cachés sous leurs parapluies.",
+      "translation": "People were walking quickly, sheltered under their umbrellas.",
+      "vocabularyRefs": ["v002", "v003"],
+      "grammarRefs": ["g001", "g002"]
+    },
+    {
+      "id": "s01-03",
+      "paragraph": 1,
+      "order": 3,
+      "text": "Malgré le mauvais temps, un vieux monsieur souriait dans sa boutique.",
+      "translation": "Despite the bad weather, an elderly gentleman was smiling in his shop.",
+      "vocabularyRefs": ["v004", "v005", "v006"],
+      "expressionRefs": ["e001", "e002"],
+      "grammarRefs": ["g001"]
+    },
+    {
+      "id": "s01-04",
+      "paragraph": 1,
+      "order": 4,
+      "text": "« La pluie fait pousser les fleurs », disait-il souvent.",
+      "translation": "“Rain makes the flowers grow,” he often said.",
+      "literal": "“The rain makes grow the flowers,” he said often.",
+      "vocabularyRefs": ["v007", "v008"],
+      "grammarRefs": ["g003"]
+    }
+  ],
+  "vocabulary": [
+    {
+      "id": "v001",
+      "surface": "pleuvait",
+      "lemma": "pleuvoir",
+      "pos": "verb",
+      "meaningInContext": "it was raining (impersonal weather verb, only ever used with 'il')",
+      "morphology": {
+        "description": "imparfait, 3rd person singular of 'pleuvoir' (impersonal)",
+        "features": ["imparfait", "impersonal", "3sg"]
+      },
+      "collocations": ["il pleut des cordes (it's raining hard)"],
+      "examples": [
+        { "text": "Il pleuvait quand je suis sorti.", "translation": "It was raining when I went out." }
+      ],
+      "sentenceRefs": ["s01-01"],
+      "priority": "high",
+      "confidence": "high",
+      "needsVerification": false,
+      "tags": ["weather"]
+    },
+    {
+      "id": "v002",
+      "surface": "cachés",
+      "lemma": "cacher",
+      "pos": "verb",
+      "meaningInContext": "sheltering / hidden (past participle of 'cacher', used as an adjective describing 'les gens')",
+      "morphology": {
+        "description": "past participle of 'cacher', agreeing in masculine plural with 'les gens'",
+        "features": ["past participle", "masculine plural"]
+      },
+      "sentenceRefs": ["s01-02"],
+      "priority": "medium",
+      "confidence": "high",
+      "needsVerification": false
+    },
+    {
+      "id": "v003",
+      "surface": "parapluies",
+      "lemma": "parapluie",
+      "pos": "noun",
+      "gender": "masculine",
+      "meaningInContext": "umbrellas",
+      "collocations": ["ouvrir un parapluie (to open an umbrella)", "un parapluie pliant (a folding umbrella)"],
+      "sentenceRefs": ["s01-02"],
+      "priority": "medium",
+      "confidence": "high",
+      "needsVerification": false
+    },
+    {
+      "id": "v004",
+      "surface": "Malgré",
+      "lemma": "malgré",
+      "pos": "preposition",
+      "meaningInContext": "despite / in spite of",
+      "examples": [
+        { "text": "Malgré la pluie, ils sont sortis.", "translation": "Despite the rain, they went out." }
+      ],
+      "commonErrors": ["do not write 'malgré que'; use 'bien que' + subjunctive instead"],
+      "sentenceRefs": ["s01-03"],
+      "priority": "high",
+      "confidence": "high",
+      "needsVerification": false
+    },
+    {
+      "id": "v005",
+      "surface": "souriait",
+      "lemma": "sourire",
+      "pos": "verb",
+      "meaningInContext": "was smiling",
+      "morphology": {
+        "description": "imparfait, 3rd person singular of 'sourire' (irregular; present 'sourit')",
+        "features": ["imparfait", "3sg", "irregular"]
+      },
+      "sentenceRefs": ["s01-03"],
+      "priority": "medium",
+      "confidence": "high",
+      "needsVerification": false
+    },
+    {
+      "id": "v006",
+      "surface": "boutique",
+      "lemma": "boutique",
+      "pos": "noun",
+      "gender": "feminine",
+      "meaningInContext": "a small shop / store",
+      "sentenceRefs": ["s01-03"],
+      "priority": "low",
+      "confidence": "high",
+      "needsVerification": false
+    },
+    {
+      "id": "v007",
+      "surface": "pousser",
+      "lemma": "pousser",
+      "pos": "verb",
+      "meaningInContext": "to grow; here in 'faire pousser', to make (flowers) grow",
+      "examples": [
+        { "text": "Les plantes poussent au printemps.", "translation": "Plants grow in spring." }
+      ],
+      "sentenceRefs": ["s01-04"],
+      "priority": "medium",
+      "confidence": "high",
+      "needsVerification": false
+    },
+    {
+      "id": "v008",
+      "surface": "fleurs",
+      "lemma": "fleur",
+      "pos": "noun",
+      "gender": "feminine",
+      "meaningInContext": "flowers",
+      "sentenceRefs": ["s01-04"],
+      "priority": "low",
+      "confidence": "high",
+      "needsVerification": false
+    }
+  ],
+  "expressions": [
+    {
+      "id": "e001",
+      "text": "mauvais temps",
+      "type": "collocation",
+      "meaningInContext": "bad weather (the standard French collocation)",
+      "register": "neutral",
+      "region": [],
+      "examples": [
+        { "text": "On annonce du mauvais temps pour demain.", "translation": "Bad weather is forecast for tomorrow." }
+      ],
+      "sentenceRefs": ["s01-03"],
+      "priority": "medium",
+      "confidence": "high",
+      "needsVerification": false
+    },
+    {
+      "id": "e002",
+      "text": "vieux monsieur",
+      "type": "collocation",
+      "meaningInContext": "an elderly gentleman (polite, conventional collocation)",
+      "register": "neutral",
+      "region": [],
+      "sentenceRefs": ["s01-03"],
+      "priority": "low",
+      "confidence": "high",
+      "needsVerification": false
+    }
+  ],
+  "grammar": [
+    {
+      "id": "g001",
+      "title": "L'imparfait — the background/ongoing past",
+      "explanation": "The imparfait describes an ongoing state or background scene in the past. In this text it sets the scene: 'il pleuvait' (it was raining), 'marchaient' (they were walking), 'souriait' (he was smiling). It contrasts with the passé composé, which reports completed events.",
+      "pattern": "radical (1st-person-plural present minus -ons) + -ais / -ait / -aient",
+      "examples": [
+        { "text": "Il pleuvait sur la ville.", "translation": "It was raining over the city." },
+        { "text": "Il souriait souvent.", "translation": "He used to smile often." }
+      ],
+      "pitfalls": [
+        "using the passé composé to describe background states",
+        "forgetting the imparfait for habitual actions (used to)"
+      ],
+      "sentenceRefs": ["s01-01", "s01-02", "s01-03"],
+      "priority": "high",
+      "confidence": "high",
+      "needsVerification": false
+    },
+    {
+      "id": "g002",
+      "title": "The past participle as an adjective (agreement)",
+      "explanation": "A past participle can modify a noun like an adjective. Here 'cachés' describes 'les gens' and agrees with it in masculine plural (-s).",
+      "pattern": "noun + past participle (agreeing in gender and number)",
+      "examples": [
+        { "text": "Les gens, cachés sous leurs parapluies, marchaient vite.", "translation": "The people, sheltered under their umbrellas, walked quickly." }
+      ],
+      "pitfalls": ["forgetting the agreement when the participle modifies a preceding noun"],
+      "sentenceRefs": ["s01-02"],
+      "priority": "medium",
+      "confidence": "high",
+      "needsVerification": false
+    },
+    {
+      "id": "g003",
+      "title": "The causative 'faire + infinitive'",
+      "explanation": "'faire' + infinitive means 'to make/have something happen'. 'La pluie fait pousser les fleurs' = 'the rain makes the flowers grow'. The subject (la pluie) causes the action; the doer of the infinitive, if expressed, becomes an indirect object (à…).",
+      "pattern": "faire (conjugated) + infinitive",
+      "examples": [
+        { "text": "Je fais réparer la voiture.", "translation": "I'm having the car repaired." }
+      ],
+      "pitfalls": [
+        "translating word-for-word as 'make to grow'",
+        "using the wrong pronoun for the doer of the action"
+      ],
+      "sentenceRefs": ["s01-04"],
+      "priority": "high",
+      "confidence": "high",
+      "needsVerification": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "x001",
+      "type": "meaning",
+      "prompt": "In this sentence, what does « malgré » mean?",
+      "options": ["despite", "thanks to", "because of", "since"],
+      "answer": {
+        "key": "despite",
+        "explanation": "« malgré » introduces a concession: despite the bad weather."
+      },
+      "difficulty": "easy",
+      "relatedVocabulary": ["v004"]
+    },
+    {
+      "id": "x002",
+      "type": "cloze",
+      "prompt": "Complete the sentence: Ce matin, il ___ sur la ville.",
+      "answer": {
+        "key": "pleuvait",
+        "explanation": "The imparfait 'pleuvait' describes the ongoing rain that set the scene."
+      },
+      "difficulty": "easy",
+      "relatedVocabulary": ["v001"]
+    },
+    {
+      "id": "x003",
+      "type": "grammar-discrimination",
+      "prompt": "Which past tense is used in « il pleuvait »?",
+      "options": ["l'imparfait", "le passé composé", "le passé simple", "le futur"],
+      "answer": {
+        "key": "l'imparfait",
+        "explanation": "The imparfait describes the background state of the weather."
+      },
+      "difficulty": "easy",
+      "relatedGrammar": ["g001"]
+    },
+    {
+      "id": "x004",
+      "type": "translation",
+      "prompt": "Translate into English: « La pluie fait pousser les fleurs. »",
+      "answer": {
+        "model": "Rain makes the flowers grow.",
+        "rubric": [
+          "renders the causative 'faire + infinitive' as 'make(s) … grow'",
+          "keeps 'la pluie' as the subject and 'les fleurs' as the object"
+        ],
+        "explanation": "The causative construction 'faire pousser' means 'to make grow'."
+      },
+      "difficulty": "medium",
+      "relatedGrammar": ["g003"]
+    },
+    {
+      "id": "x005",
+      "type": "collocation",
+      "prompt": "Which adjective forms the collocation for 'bad weather' in the text?",
+      "options": ["mauvais", "grand", "fort", "lourd"],
+      "answer": {
+        "key": "mauvais",
+        "explanation": "'mauvais temps' is the standard collocation for 'bad weather'."
+      },
+      "difficulty": "easy",
+      "relatedExpressions": ["e001"]
+    }
+  ],
+  "qa": {
+    "checks": [
+      { "id": "c01", "name": "source-fidelity", "status": "pass" },
+      { "id": "c02", "name": "sentence-integrity", "status": "pass" },
+      { "id": "c03", "name": "surface-integrity", "status": "pass" },
+      { "id": "c04", "name": "cross-reference-resolution", "status": "pass" },
+      { "id": "c05", "name": "id-uniqueness-and-format", "status": "pass" },
+      { "id": "c06", "name": "schema-conformance", "status": "pass" },
+      { "id": "c07", "name": "no-dangling-or-orphan-records", "status": "pass" },
+      { "id": "c08", "name": "no-invention", "status": "pass" },
+      { "id": "c09", "name": "context-over-dictionary", "status": "pass" },
+      { "id": "c10", "name": "layered-meanings", "status": "pass" },
+      { "id": "c11", "name": "uncertainty-flagged", "status": "pass" }
+    ],
+    "summary": "pass",
+    "validator": "scripts/validate_document.py",
+    "reviewedAt": "2026-10-27T16:35:00Z"
+  }
+}

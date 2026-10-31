@@ -1,0 +1,10 @@
+{
+  "name": "pastel",
+  "description": "Soft, low-saturation palette for long reading sessions. Calmer than the default.",
+  "colors": [
+    "#F1948A", "#F0B27A", "#F7DC6F", "#82E0AA",
+    "#76D7C4", "#85C1E9", "#BB8FCE", "#F5B7B1",
+    "#A3E4D7", "#F8C471", "#AED6F1", "#D2B4DE",
+    "#A9DFBF", "#F5CBA7", "#ABB2B9", "#BDC3C7"
+  ]
+}

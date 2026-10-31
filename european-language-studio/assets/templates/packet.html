@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>{{TITLE}}</title>
+<style>
+/* ===== Design tokens ===== */
+:root{
+  --bg:#f6f6f8;
+  --surface:#ffffff;
+  --surface-2:#efeff3;
+  --text:#1c1c21;
+  --text-2:#6b6b76;
+  --text-3:#9a9aa4;
+  --border:#e3e3e9;
+  --accent:#e0283c;
+  --accent-ink:#c2182f;
+  --accent-soft:rgba(224,40,60,.10);
+  --ok:#1f9d55;
+  --warn:#b7791f;
+  --bad:#d32f2f;
+  --shadow:0 1px 2px rgba(20,20,40,.06),0 8px 24px rgba(20,20,40,.08);
+  --shadow-sm:0 1px 2px rgba(20,20,40,.08);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e0e11;
+    --surface:#17171c;
+    --surface-2:#1f1f26;
+    --text:#f2f2f5;
+    --text-2:#a7a7b2;
+    --text-3:#6c6c77;
+    --border:#2a2a33;
+    --accent:#ff4d5e;
+    --accent-ink:#ff7a86;
+    --accent-soft:rgba(255,77,94,.14);
+    --ok:#4dd289;
+    --warn:#e3b341;
+    --bad:#ff6b6b;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.5);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e0e11;
+  --surface:#17171c;
+  --surface-2:#1f1f26;
+  --text:#f2f2f5;
+  --text-2:#a7a7b2;
+  --text-3:#6c6c77;
+  --border:#2a2a33;
+  --accent:#ff4d5e;
+  --accent-ink:#ff7a86;
+  --accent-soft:rgba(255,77,94,.14);
+  --ok:#4dd289;
+  --warn:#e3b341;
+  --bad:#ff6b6b;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.5);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+  color-scheme:dark;
+}
+
+/* ===== Reset & base ===== */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:16px; line-height:1.55; color:var(--text);
+  background:var(--bg);
+  padding:calc(env(safe-area-inset-top, 0px) + 0px) 0 calc(env(safe-area-inset-bottom, 0px) + 64px) 0;
+  min-height:100vh;
+}
+img{max-width:100%}
+[hidden]{display:none!important}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ===== Header ===== */
+.top{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 86%, transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.top-inner{max-width:1080px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.title-block{min-width:0}
+h1{margin:0;font-size:21px;font-weight:700;letter-spacing:-.02em;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta-line{margin-top:3px;font-size:12.5px;color:var(--text-2)}
+#theme-toggle{flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:18px;display:grid;place-items:center;box-shadow:var(--shadow-sm)}
+#theme-toggle:hover{border-color:var(--text-3)}
+
+/* ===== Tabs ===== */
+.tabs{position:sticky;top:69px;z-index:20;background:color-mix(in srgb,var(--bg) 88%, transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.tabs-inner{max-width:1080px;margin:0 auto;padding:0 12px;display:flex;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs-inner::-webkit-scrollbar{display:none}
+.tab{flex:none;padding:12px 16px;background:none;border:none;color:var(--text-2);font-size:14px;font-weight:600;position:relative;white-space:nowrap}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--text)}
+.tab.active::after{content:"";position:absolute;left:12px;right:12px;bottom:0;height:2.5px;border-radius:3px 3px 0 0;background:var(--accent)}
+
+/* ===== Layout ===== */
+main{max-width:1080px;margin:0 auto;padding:28px 20px 40px}
+.panel{display:none;animation:fade .18s ease}
+.panel.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);margin:0 0 16px}
+.empty{padding:32px 16px;text-align:center;color:var(--text-2);font-size:14.5px;background:var(--surface);border:1px dashed var(--border);border-radius:16px}
+
+/* ===== Reading tab ===== */
+.para{margin-bottom:34px}
+.para-head{font-size:12px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+.sent-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:14px 0;border-bottom:1px solid var(--border)}
+.sent-row:last-child{border-bottom:none}
+.sent-orig{font-size:17.5px;font-weight:500;line-height:1.5}
+.sent-trans{font-size:15.5px;color:var(--text-2);line-height:1.55}
+.sent-literal{margin-top:6px;font-size:13px;color:var(--text-3);font-style:italic}
+.sent-id{font-size:11px;color:var(--text-3);font-weight:700;margin-right:6px;font-variant-numeric:tabular-nums}
+@media (max-width:640px){
+  .sent-row{grid-template-columns:1fr;gap:6px}
+  .sent-trans{padding-left:2px}
+}
+
+/* ===== Annotated tab ===== */
+.annot-block{margin-bottom:30px}
+.annot-sent{font-size:19px;line-height:1.75;font-weight:450}
+.token{color:var(--tok);background:var(--tok-bg);border-radius:4px;padding:0 3px;margin:0 1px;cursor:pointer;transition:background .12s}
+.token:hover{filter:brightness(.96)}
+.annot-trans{margin-top:10px;font-size:15px;color:var(--text-2);padding-left:4px;border-left:3px solid var(--border);padding-left:12px}
+.annot-literal{margin-top:4px;font-size:13px;color:var(--text-3);font-style:italic}
+
+/* ===== Tooltip ===== */
+.tooltip{position:fixed;z-index:60;width:min(340px,calc(100vw - 32px));background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:14px 16px;font-size:14px}
+.tooltip .tt-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.tooltip .tt-surface{font-size:19px;font-weight:700}
+.tooltip .tt-lemma{font-size:13px;color:var(--text-2)}
+.tooltip .tt-pos{font-size:11px;font-weight:700;color:var(--accent-ink);text-transform:uppercase;letter-spacing:.04em;background:var(--accent-soft);padding:1px 7px;border-radius:99px}
+.tooltip .tt-ipa{font-size:13px;color:var(--text-3);font-style:italic}
+.tooltip .tt-meaning{margin:6px 0}
+.tooltip .tt-row{margin-top:7px}
+.tooltip .tt-label{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+.tooltip .tt-tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:99px;background:var(--surface-2);color:var(--text-2);margin:1px 3px 1px 0}
+.tooltip .tt-verify{margin-top:8px;font-size:12px;color:var(--warn)}
+
+/* ===== Cards (vocab & expressions) ===== */
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.controls input[type=search]{flex:1;min-width:180px;padding:9px 13px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:14px}
+.controls select,.controls button.chip{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.vcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--shadow-sm);cursor:pointer;transition:transform .12s,box-shadow .12s}
+.vcard:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.vcard-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.vcard-surface{font-size:19px;font-weight:700}
+.vcard-lemma{font-size:13px;color:var(--text-2)}
+.vcard-ipa{font-size:12.5px;color:var(--text-3);font-style:italic}
+.vcard-pos{font-size:10.5px;font-weight:700;color:var(--accent-ink);text-transform:uppercase;letter-spacing:.04em;background:var(--accent-soft);padding:1px 7px;border-radius:99px}
+.vcard-meaning{font-size:14px;color:var(--text);margin-top:4px}
+.vcard-prio{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.prio-high{color:var(--accent-ink)}
+.prio-medium{color:var(--warn)}
+.prio-low{color:var(--text-3)}
+.vcard-detail{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:13.5px;display:none}
+.vcard.open .vcard-detail{display:block}
+.detail-row{margin-bottom:9px}
+.detail-label{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.detail-row ul{margin:0;padding-left:18px}
+.detail-row li{margin-bottom:3px}
+.ex-src{font-style:italic}
+.ex-tr{color:var(--text-2)}
+
+/* ===== Expressions ===== */
+.excard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
+.excard-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.excard-text{font-size:18px;font-weight:700}
+.badge{font-size:11px;font-weight:700;padding:1px 8px;border-radius:99px;background:var(--surface-2);color:var(--text-2)}
+.badge-type{background:var(--accent-soft);color:var(--accent-ink)}
+.badge-reg{background:var(--surface-2);color:var(--text-2)}
+.badge-sens-warn{background:rgba(179,119,31,.15);color:var(--warn)}
+
+/* ===== Grammar ===== */
+.gcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}
+.gcard-title{font-size:17px;font-weight:700;margin-bottom:8px}
+.gcard-title .gid{font-size:12px;color:var(--text-3);font-weight:700;margin-right:6px}
+.gcard-explain{font-size:14.5px;line-height:1.6}
+.gcard-pattern{margin:10px 0;padding:8px 12px;background:var(--surface-2);border-radius:8px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;overflow-x:auto}
+.gcard-ex{margin-top:8px;padding:8px 12px;border-left:3px solid var(--border);font-size:13.5px}
+.gcard-refs{margin-top:10px;font-size:12.5px;color:var(--text-2)}
+.gcard-refs a{color:var(--accent-ink);text-decoration:none;cursor:pointer}
+
+/* ===== Exercises ===== */
+.exercise{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}
+.exercise-head{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.exercise-prompt{font-size:15.5px;margin-bottom:10px}
+.exercise-prompt .blank{display:inline-block;min-width:70px;border-bottom:2px solid var(--text-3);margin:0 2px}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:14.5px;transition:border-color .12s,background .12s}
+.opt:hover{border-color:var(--text-3)}
+.opt.correct{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 10%, transparent)}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%, transparent)}
+.opt.reveal{border-color:var(--ok)}
+.reveal-btn{margin-top:10px;padding:8px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:13.5px;font-weight:600}
+.reveal-btn:hover{border-color:var(--text-3)}
+.answer-box{display:none;margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--surface-2);font-size:14px}
+.answer-box.show{display:block}
+.answer-box .lbl{font-weight:700;color:var(--accent-ink)}
+.rubric{margin:6px 0 0;padding-left:18px}
+.rubric li{margin-bottom:3px}
+
+/* ===== Flashcards ===== */
+.flash-wrap{max-width:520px;margin:0 auto}
+.flash-stage{perspective:1200px;margin:0 auto}
+.flash{position:relative;width:100%;min-height:260px;transform-style:preserve-3d;transition:transform .5s;cursor:pointer}
+.flash.flipped{transform:rotateY(180deg)}
+.flash-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:32px 24px;border-radius:18px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);text-align:center}
+.flash-back{transform:rotateY(180deg)}
+.flash-front-word{font-size:30px;font-weight:700}
+.flash-front-ipa{font-size:14px;color:var(--text-3);font-style:italic}
+.flash-hint{font-size:12px;color:var(--text-3);position:absolute;bottom:14px}
+.flash-back-lemma{font-size:18px;font-weight:700}
+.flash-back-meaning{font-size:16px}
+.flash-back-meta{font-size:13px;color:var(--text-2)}
+.flash-nav{display:flex;gap:10px;justify-content:center;align-items:center;margin-top:18px}
+.flash-nav button{padding:10px 18px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:14px;font-weight:600}
+.flash-nav button:hover{border-color:var(--text-3)}
+.flash-count{font-size:13px;color:var(--text-2);font-variant-numeric:tabular-nums}
+.flash-export{margin-top:22px;text-align:center}
+.flash-export button{padding:9px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:13px}
+.flash-export textarea{width:100%;height:130px;margin-top:10px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2);color:var(--text);font-family:ui-monospace,Menlo,monospace;font-size:12px;padding:10px}
+
+/* ===== QA footer ===== */
+.qa{margin-top:8px;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--border);font-size:13px}
+.qa summary{cursor:pointer;font-weight:600;color:var(--text-2)}
+.qa table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12.5px}
+.qa th,.qa td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--border)}
+.qa th{color:var(--text-3);text-transform:uppercase;letter-spacing:.04em;font-size:11px}
+.st-pass{color:var(--ok);font-weight:700}
+.st-fail{color:var(--bad);font-weight:700}
+.st-unverified{color:var(--warn);font-weight:700}
+.st-na{color:var(--text-3)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="title-block">
+      <h1 id="title">Study packet</h1>
+      <div class="meta-line" id="meta-line"></div>
+    </div>
+    <button id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">◐</button>
+  </div>
+</header>
+
+<nav class="tabs"><div class="tabs-inner" id="tabs">
+  <button class="tab active" data-tab="reading">Reading</button>
+  <button class="tab" data-tab="annotated">Annotated</button>
+  <button class="tab" data-tab="vocabulary">Vocabulary</button>
+  <button class="tab" data-tab="expressions">Expressions</button>
+  <button class="tab" data-tab="grammar">Grammar</button>
+  <button class="tab" data-tab="exercises">Exercises</button>
+  <button class="tab" data-tab="cards">Cards</button>
+</div></nav>
+
+<main>
+  <section class="panel active" id="panel-reading"></section>
+  <section class="panel" id="panel-annotated"></section>
+  <section class="panel" id="panel-vocabulary"></section>
+  <section class="panel" id="panel-expressions"></section>
+  <section class="panel" id="panel-grammar"></section>
+  <section class="panel" id="panel-exercises"></section>
+  <section class="panel" id="panel-cards"></section>
+</main>
+
+<div id="tooltip" class="tooltip" hidden></div>
+
+<script id="packet-data" type="application/json">{{PACKET_JSON}}</script>
+<script id="palette-data" type="application/json">{{PALETTE_JSON}}</script>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- utils ---------- */
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function hexToRgba(hex,a){hex=(hex||"").replace("#","");if(!/^[0-9a-fA-F]{6}$/.test(hex))return "transparent";
+  var r=parseInt(hex.slice(0,2),16),g=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);
+  return "rgba("+r+","+g+","+b+","+a+")"}
+function readJSON(id){try{return JSON.parse(document.getElementById(id).textContent)}catch(e){return null}}
+
+var DATA = readJSON("packet-data") || {};
+var PALETTE = readJSON("palette-data") || ["#E74C3C","#E67E22","#F1C40F","#2ECC71","#1ABC9C","#3498DB","#9B59B6","#E91E63","#16A085","#D35400","#2980B9","#8E44AD"];
+var meta = DATA.meta || {};
+var sentences = DATA.sentences || [];
+var vocabulary = DATA.vocabulary || [];
+var expressions = DATA.expressions || [];
+var grammar = DATA.grammar || [];
+var exercises = DATA.exercises || [];
+var qa = DATA.qa || {};
+
+/* ---------- color assignment ---------- */
+var colorMap = {};
+vocabulary.forEach(function(v,i){ colorMap[v.id] = PALETTE[i % PALETTE.length]; });
+
+/* ---------- vocab card body (shared by tooltip & vocab tab) ---------- */
+function vocabDetail(v){
+  var h="";
+  if(v.morphology && v.morphology.description){h+='<div class="detail-row"><div class="detail-label">Morphology</div><div>'+esc(v.morphology.description)+'</div></div>'}
+  if(v.collocations && v.collocations.length){h+='<div class="detail-row"><div class="detail-label">Collocations</div>'+v.collocations.map(function(c){return '<span class="tt-tag">'+esc(c)+'</span>'}).join("")+'</div>'}
+  if(v.examples && v.examples.length){h+='<div class="detail-row"><div class="detail-label">Examples</div>'+v.examples.map(function(e){return '<div class="ex-src">'+esc(e.text)+'</div><div class="ex-tr">'+esc(e.translation)+'</div>'}).join("")+'</div>'}
+  if(v.commonErrors && v.commonErrors.length){h+='<div class="detail-row"><div class="detail-label">Common errors</div><ul>'+v.commonErrors.map(function(c){return "<li>"+esc(c)+"</li>"}).join("")+'</ul></div>'}
+  if(v.confusions && v.confusions.length){h+='<div class="detail-row"><div class="detail-label">Watch out</div><ul>'+v.confusions.map(function(c){return "<li><b>"+esc(c.term)+"</b> — "+esc(c.distinction)+"</li>"}).join("")+'</ul></div>'}
+  if(v.region && v.region.length){h+='<div class="detail-row"><div class="detail-label">Region</div>'+v.region.map(function(r){return '<span class="tt-tag">'+esc(r)+'</span>'}).join("")+'</div>'}
+  return h;
+}
+
+/* ---------- header ---------- */
+function renderHeader(){
+  document.title = meta.title || "Study packet";
+  document.getElementById("title").textContent = meta.title || "Study packet";
+  var langNames={en:"English",fr:"French",es:"Spanish",de:"German",it:"Italian",pt:"Portuguese",nl:"Dutch",sv:"Swedish",no:"Norwegian",da:"Danish"};
+  var src = langNames[meta.textLanguage] || meta.textLanguage || "";
+  var parts=[];
+  if(src) parts.push(src);
+  if(meta.explanationLanguage) parts.push("→ "+meta.explanationLanguage);
+  if(meta.genre) parts.push(meta.genre);
+  if(meta.register) parts.push(meta.register);
+  document.getElementById("meta-line").textContent = parts.join(" · ");
+}
+
+/* ---------- reading ---------- */
+function renderReading(){
+  var el=document.getElementById("panel-reading"); var h="";
+  if(!sentences.length){el.innerHTML='<div class="empty">No sentences.</div>';return}
+  var byPara={};
+  sentences.forEach(function(s){ (byPara[s.paragraph]=byPara[s.paragraph]||[]).push(s); });
+  Object.keys(byPara).sort(function(a,b){return a-b}).forEach(function(p){
+    h+='<div class="para"><div class="para-head">Paragraph '+p+'</div>';
+    byPara[p].forEach(function(s){
+      h+='<div class="sent-row" id="sent-'+esc(s.id)+'"><div><span class="sent-id">'+esc(s.id)+'</span><span class="sent-orig">'+esc(s.text)+'</span></div>'
+       +'<div><div class="sent-trans">'+esc(s.translation)+'</div>'
+       +(s.literal?'<div class="sent-literal">'+esc(s.literal)+'</div>':'')
+       +'</div></div>';
+    });
+    h+='</div>';
+  });
+  h+=renderQA();
+  el.innerHTML=h;
+}
+
+/* ---------- annotated (word highlighting) ---------- */
+function isWordChar(ch){ return !!ch && /[\p{L}\p{M}']/u.test(ch); }
+function highlightText(text, items){
+  // items: array of {id, surface}; sort longest-first to prefer whole expressions
+  items.sort(function(a,b){return b.surface.length-a.surface.length});
+  var marks=[];
+  items.forEach(function(it){
+    var s=it.surface, idx=text.indexOf(s);
+    while(idx!==-1){
+      if(!isWordChar(text[idx-1]) && !isWordChar(text[idx+s.length])) marks.push({start:idx,end:idx+s.length,id:it.id});
+      idx=text.indexOf(s, idx+s.length);
+    }
+  });
+  marks.sort(function(a,b){return a.start-b.start || (b.end-b.start)-(a.end-a.start)});
+  var accepted=[], lastEnd=-1;
+  marks.forEach(function(m){ if(m.start>=lastEnd){accepted.push(m);lastEnd=m.end;} });
+  var html="", pos=0;
+  accepted.forEach(function(m){
+    html+=esc(text.slice(pos,m.start));
+    var c=colorMap[m.id]||"#888888";
+    html+='<span class="token" data-vocab="'+esc(m.id)+'" style="--tok:'+c+';--tok-bg:'+hexToRgba(c,0.16)+'">'+esc(text.slice(m.start,m.end))+'</span>';
+    pos=m.end;
+  });
+  html+=esc(text.slice(pos));
+  return html;
+}
+function renderAnnotated(){
+  var el=document.getElementById("panel-annotated"); var h="";
+  if(!sentences.length){el.innerHTML='<div class="empty">No sentences.</div>';return}
+  var vocabById={}; vocabulary.forEach(function(v){vocabById[v.id]=v});
+  var byPara={};
+  sentences.forEach(function(s){ (byPara[s.paragraph]=byPara[s.paragraph]||[]).push(s); });
+  Object.keys(byPara).sort(function(a,b){return a-b}).forEach(function(p){
+    h+='<div class="para"><div class="para-head">Paragraph '+p+'</div>';
+    byPara[p].forEach(function(s){
+      var items=(s.vocabularyRefs||[]).map(function(id){var v=vocabById[id];return v?{id:id,surface:v.surface}:null}).filter(Boolean);
+      h+='<div class="annot-block"><div class="annot-sent">'+highlightText(s.text,items)+'</div>'
+        +'<div class="annot-trans">'+esc(s.translation)+'</div>'
+        +(s.literal?'<div class="annot-literal">'+esc(s.literal)+'</div>':'')
+        +'</div>';
+    });
+    h+='</div>';
+  });
+  h+='<div class="annot-hint" style="color:var(--text-3);font-size:12.5px;margin-top:4px">Tap or hover a highlighted word for its full entry.</div>';
+  h+=renderQA();
+  el.innerHTML=h;
+}
+
+/* ---------- vocabulary ---------- */
+function renderVocabulary(){
+  var el=document.getElementById("panel-vocabulary");
+  if(!vocabulary.length){el.innerHTML='<div class="empty">No vocabulary annotated for this text.</div>';return}
+  var h='<div class="controls"><input type="search" id="vocab-search" placeholder="Search…">'
+       +'<select id="vocab-sort"><option value="order">Reading order</option><option value="alpha">Alphabetical</option><option value="priority">Priority</option></select>'
+       +'<select id="vocab-filter"><option value="all">All priorities</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></div>'
+       +'<div class="grid" id="vocab-grid"></div>'+renderQA();
+  el.innerHTML=h;
+  var grid=document.getElementById("vocab-grid");
+  function render(){
+    var q=(document.getElementById("vocab-search").value||"").toLowerCase();
+    var sort=document.getElementById("vocab-sort").value;
+    var filt=document.getElementById("vocab-filter").value;
+    var list=vocabulary.filter(function(v){
+      if(filt!=="all" && v.priority!==filt) return false;
+      if(q && !(v.surface+" "+v.lemma+" "+v.meaningInContext).toLowerCase().includes(q)) return false;
+      return true;
+    });
+    if(sort==="alpha") list.sort(function(a,b){return (a.lemma||a.surface).localeCompare(b.lemma||b.surface)});
+    else if(sort==="priority"){var order={high:0,medium:1,low:2}; list.sort(function(a,b){return (order[a.priority]??9)-(order[b.priority]??9)})}
+    grid.innerHTML=list.map(function(v){
+      var c=colorMap[v.id]||"#888888";
+      var ipa=v.pronunciation&&v.pronunciation.ipa?'<span class="vcard-ipa">/'+esc(v.pronunciation.ipa)+'/</span>':'';
+      return '<div class="vcard" data-id="'+esc(v.id)+'"><div class="vcard-head">'
+        +'<span class="vcard-surface" style="color:'+c+'">'+esc(v.surface)+'</span>'
+        +'<span class="vcard-lemma">'+esc(v.lemma)+'</span>'
+        +'<span class="vcard-pos">'+esc(v.pos)+'</span>'
+        +'</div>'+ipa
+        +'<div class="vcard-meaning">'+esc(v.meaningInContext)+'</div>'
+        +'<div class="vcard-prio prio-'+esc(v.priority||"")+'" style="margin-top:8px">'+esc(v.priority||"")+(v.needsVerification?' · ⚠ verify':'')+'</div>'
+        +'<div class="vcard-detail">'+vocabDetail(v)+'</div></div>';
+    }).join("");
+  }
+  document.getElementById("vocab-search").addEventListener("input",render);
+  document.getElementById("vocab-sort").addEventListener("change",render);
+  document.getElementById("vocab-filter").addEventListener("change",render);
+  grid.addEventListener("click",function(e){
+    var card=e.target.closest(".vcard"); if(!card) return;
+    card.classList.toggle("open");
+  });
+  render();
+}
+
+/* ---------- expressions ---------- */
+function renderExpressions(){
+  var el=document.getElementById("panel-expressions"); var h="";
+  if(!expressions.length){el.innerHTML='<div class="empty">No fixed expressions or idioms worth singling out in this text.</div>';return}
+  h=expressions.map(function(e){
+    var badges='<span class="badge badge-type">'+esc(e.type)+'</span>'
+      +'<span class="badge badge-reg">'+esc(e.register||"neutral")+'</span>'
+      +(e.sensitivity && e.sensitivity!=="none"?'<span class="badge badge-sens-warn">'+esc(e.sensitivity)+'</span>':'');
+    var region=e.region&&e.region.length?'<div class="detail-row"><div class="detail-label">Region</div>'+e.region.map(function(r){return '<span class="tt-tag">'+esc(r)+'</span>'}).join("")+(e.regionCertainty&&e.regionCertainty!=="verified"?' <span style="color:var(--text-3)">('+esc(e.regionCertainty)+')</span>':'')+'</div>':'';
+    var literal=e.literalMeaning?'<div class="detail-row"><div class="detail-label">Literal meaning</div><div class="ex-src">'+esc(e.literalMeaning)+'</div></div>':'';
+    var ex=e.examples&&e.examples.length?'<div class="detail-row"><div class="detail-label">Examples</div>'+e.examples.map(function(x){return '<div class="ex-src">'+esc(x.text)+'</div><div class="ex-tr">'+esc(x.translation)+'</div>'}).join("")+'</div>':'';
+    var alt=e.alternatives&&e.alternatives.length?'<div class="detail-row"><div class="detail-label">Alternatives</div>'+e.alternatives.map(function(a){return '<span class="tt-tag">'+esc(a)+'</span>'}).join("")+'</div>':'';
+    var notes=e.usageNotes&&e.usageNotes.length?'<div class="detail-row"><div class="detail-label">Usage</div><ul>'+e.usageNotes.map(function(n){return "<li>"+esc(n)+"</li>"}).join("")+'</ul></div>':'';
+    return '<div class="excard"><div class="excard-head"><span class="excard-text">'+esc(e.text)+'</span>'+badges+'</div>'
+      +'<div class="vcard-meaning">'+esc(e.meaningInContext)+'</div>'
+      +'<div class="vcard-detail" style="display:block">'+literal+region+ex+alt+notes
+      +(e.needsVerification?'<div class="tt-verify">⚠ needs verification</div>':'')+'</div></div>';
+  }).join("");
+  el.innerHTML=h+renderQA();
+}
+
+/* ---------- grammar ---------- */
+function renderGrammar(){
+  var el=document.getElementById("panel-grammar"); var h="";
+  if(!grammar.length){el.innerHTML='<div class="empty">No grammar points explained for this text.</div>';return}
+  h=grammar.map(function(g){
+    var pat=g.pattern?'<div class="gcard-pattern">'+esc(g.pattern)+'</div>':'';
+    var ex=g.examples&&g.examples.length?'<div class="gcard-ex">'+g.examples.map(function(x){return '<div class="ex-src">'+esc(x.text)+'</div><div class="ex-tr">'+esc(x.translation)+'</div>'}).join("")+'</div>':'';
+    var pit=g.pitfalls&&g.pitfalls.length?'<div class="detail-row"><div class="detail-label">Common errors</div><ul>'+g.pitfalls.map(function(p){return "<li>"+esc(p)+"</li>"}).join("")+'</ul></div>':'';
+    var refs=(g.sentenceRefs||[]).map(function(r){return '<a data-goto="'+esc(r)+'">'+esc(r)+'</a>'}).join(", ");
+    return '<div class="gcard"><div class="gcard-title"><span class="gid">'+esc(g.id)+'</span>'+esc(g.title)+'</div>'
+      +'<div class="gcard-explain">'+esc(g.explanation)+'</div>'+pat+ex+pit
+      +'<div class="gcard-refs">In: '+refs+'</div></div>';
+  }).join("");
+  el.innerHTML=h+renderQA();
+}
+
+/* ---------- exercises ---------- */
+function renderExercises(){
+  var el=document.getElementById("panel-exercises"); var h="";
+  if(!exercises.length){el.innerHTML='<div class="empty">No exercises for this text.</div>';return}
+  h=exercises.map(function(x,i){
+    var typeBadge='<span class="badge badge-type">'+esc(x.type)+'</span><span class="badge">'+esc(x.difficulty)+'</span>';
+    var prompt=x.prompt.replace(/\{\{\s*blank\s*\}\}/g,'<span class="blank"></span>');
+    var opts="";
+    if(x.options && x.options.length){
+      opts='<div class="opts">'+x.options.map(function(o,oi){
+        return '<button class="opt" data-key="'+esc(o)+'" data-idx="'+i+'">'+String.fromCharCode(65+oi)+'. '+esc(o)+'</button>';
+      }).join("")+'</div>';
+    }
+    var ans=x.answer||{};
+    var ansHtml='';
+    if(ans.key!=null) ansHtml+='<span class="lbl">Answer: </span>'+esc(ans.key);
+    if(ans.model!=null) ansHtml+='<span class="lbl">Model answer: </span>'+esc(ans.model);
+    if(ans.rubric && ans.rubric.length) ansHtml+='<div class="lbl">Rubric</div><ul class="rubric">'+ans.rubric.map(function(r){return "<li>"+esc(r)+"</li>"}).join("")+'</ul>';
+    if(ans.explanation) ansHtml+='<div style="margin-top:6px">'+esc(ans.explanation)+'</div>';
+    var reveal='<button class="reveal-btn" data-idx="'+i+'">Show answer</button><div class="answer-box" data-idx="'+i+'">'+ansHtml+'</div>';
+    return '<div class="exercise"><div class="exercise-head"><span class="gid">'+esc(x.id)+'</span>'+typeBadge+'</div>'
+      +'<div class="exercise-prompt">'+esc(prompt)+'</div>'+opts+reveal+'</div>';
+  }).join("");
+  el.innerHTML=h+renderQA();
+}
+
+/* ---------- cards (flashcards) ---------- */
+function buildCards(){
+  var cards=[];
+  vocabulary.forEach(function(v){
+    cards.push({kind:"vocab",front:v.surface,ipa:(v.pronunciation&&v.pronunciation.ipa)||"",
+      backTop:v.lemma+" ("+v.pos+")",backMain:v.meaningInContext,
+      backMeta:(v.morphology&&v.morphology.description)||""});
+  });
+  expressions.forEach(function(e){
+    cards.push({kind:"expr",front:e.text,ipa:"",
+      backTop:e.type+(e.register?" · "+e.register:""),backMain:e.meaningInContext,
+      backMeta:e.literalMeaning?("Literal: "+e.literalMeaning):""});
+  });
+  return cards;
+}
+function renderCards(){
+  var el=document.getElementById("panel-cards");
+  var cards=buildCards();
+  if(!cards.length){el.innerHTML='<div class="empty">No cards — annotate some vocabulary or expressions first.</div>';return}
+  var h='<div class="flash-wrap"><div class="flash-stage"><div class="flash" id="flash">'
+    +'<div class="flash-face flash-front"><div class="flash-front-word" id="f-front"></div><div class="flash-front-ipa" id="f-ipa"></div><div class="flash-hint">Tap to flip</div></div>'
+    +'<div class="flash-face flash-back"><div class="flash-back-lemma" id="f-top"></div><div class="flash-back-meaning" id="f-main"></div><div class="flash-back-meta" id="f-meta"></div></div>'
+    +'</div></div>'
+    +'<div class="flash-nav"><button id="f-prev">←</button><span class="flash-count" id="f-count"></span><button id="f-next">→</button><button id="f-shuffle">Shuffle</button></div>'
+    +'<div class="flash-export"><button id="f-export">Copy Anki TSV</button><textarea id="f-tsv" hidden></textarea></div></div>'
+    +renderQA();
+  el.innerHTML=h;
+  var idx=0, flash=document.getElementById("flash");
+  function show(i){
+    idx=(i+cards.length)%cards.length;
+    document.getElementById("f-front").textContent=cards[idx].front;
+    document.getElementById("f-ipa").textContent=cards[idx].ipa?"/"+cards[idx].ipa+"/":"";
+    document.getElementById("f-top").textContent=cards[idx].backTop;
+    document.getElementById("f-main").textContent=cards[idx].backMain;
+    document.getElementById("f-meta").textContent=cards[idx].backMeta;
+    document.getElementById("f-count").textContent=(idx+1)+" / "+cards.length;
+    flash.classList.remove("flipped");
+  }
+  flash.addEventListener("click",function(){flash.classList.toggle("flipped")});
+  document.getElementById("f-prev").addEventListener("click",function(e){e.stopPropagation();show(idx-1)});
+  document.getElementById("f-next").addEventListener("click",function(e){e.stopPropagation();show(idx+1)});
+  document.getElementById("f-shuffle").addEventListener("click",function(e){e.stopPropagation();for(var i=cards.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=cards[i];cards[i]=cards[j];cards[j]=t}show(0)});
+  document.getElementById("f-export").addEventListener("click",function(){
+    var tsv="#separator:tab\n#html:false\n#columns:Front\tBack\tTags\n";
+    vocabulary.forEach(function(v){
+      tsv+=v.surface+"\t"+v.lemma+" — "+v.meaningInContext+"\tlang-"+(meta.textLanguage||"")+" vocab "+v.priority+"\n";
+    });
+    expressions.forEach(function(e){
+      tsv+=e.text+"\t"+e.meaningInContext+" ("+e.register+")"+"\tlang-"+(meta.textLanguage||"")+" expr "+e.priority+"\n";
+    });
+    var ta=document.getElementById("f-tsv"); ta.hidden=false; ta.value=tsv;
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(tsv).then(function(){alert("Copied to clipboard")}).catch(function(){ta.select()})}
+    else{ta.select();}
+  });
+  show(0);
+}
+
+/* ---------- QA ---------- */
+function renderQA(){
+  var checks=(qa&&qa.checks)||[]; if(!checks.length) return "";
+  var cls={pass:"st-pass",fail:"st-fail",unverified:"st-unverified","not-applicable":"st-na"};
+  return '<details class="qa"><summary>Quality check — '+esc((qa.summary||"").toUpperCase())+'</summary><table><thead><tr><th>Check</th><th>Status</th><th>Notes</th></tr></thead><tbody>'
+    +checks.map(function(c){return '<tr><td>'+esc(c.name||c.id)+'</td><td class="'+(cls[c.status]||"")+'">'+esc(c.status||"")+'</td><td>'+esc(c.notes||"")+'</td></tr>'}).join("")
+    +'</tbody></table></details>';
+}
+
+/* ---------- tabs ---------- */
+function setupTabs(){
+  var tabs=document.getElementById("tabs");
+  tabs.addEventListener("click",function(e){
+    var b=e.target.closest(".tab"); if(!b) return;
+    document.querySelectorAll(".tab").forEach(function(t){t.classList.toggle("active",t===b)});
+    document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("active")});
+    var panel=document.getElementById("panel-"+b.dataset.tab);
+    if(panel) panel.classList.add("active");
+  });
+}
+
+/* ---------- tooltip ---------- */
+function setupTooltip(){
+  var tip=document.getElementById("tooltip"); var vocabById={}; vocabulary.forEach(function(v){vocabById[v.id]=v});
+  var pinned=null;
+  function showFor(token, pin){
+    var v=vocabById[token.dataset.vocab]; if(!v) return;
+    var c=colorMap[v.id]||"#888888";
+    var ipa=(v.pronunciation&&v.pronunciation.ipa)?"<div class='tt-ipa'>/"+esc(v.pronunciation.ipa)+"/</div>":"";
+    tip.innerHTML='<div class="tt-head"><span class="tt-surface" style="color:'+c+'">'+esc(v.surface)+'</span><span class="tt-lemma">'+esc(v.lemma)+'</span><span class="tt-pos">'+esc(v.pos)+'</span></div>'
+      +ipa+'<div class="tt-meaning">'+esc(v.meaningInContext)+'</div>'+vocabDetail(v)
+      +(v.needsVerification?'<div class="tt-verify">⚠ needs verification</div>':'');
+    tip.hidden=false;
+    var r=token.getBoundingClientRect();
+    var tw=tip.offsetWidth, th=tip.offsetHeight;
+    var left=Math.min(Math.max(8, r.left + r.width/2 - tw/2), window.innerWidth-tw-8);
+    var top=r.bottom+8;
+    if(top+th>window.innerHeight-8){ top=Math.max(8, r.top-th-8); }
+    tip.style.left=left+"px"; tip.style.top=top+"px";
+    pinned=pin?token:null;
+  }
+  document.addEventListener("mouseover",function(e){
+    var t=e.target.closest(".token"); if(!t) return; showFor(t,false);
+  });
+  document.addEventListener("mouseout",function(e){
+    var t=e.target.closest(".token"); if(!t||pinned) return; tip.hidden=true;
+  });
+  document.addEventListener("click",function(e){
+    var t=e.target.closest(".token");
+    if(!t){ if(!e.target.closest("#tooltip")) tip.hidden=true; pinned=null; return; }
+    if(pinned===t){pinned=null;tip.hidden=true;} else {showFor(t,true);}
+  });
+  document.addEventListener("scroll",function(){ if(!pinned) tip.hidden=true; },true);
+  window.addEventListener("resize",function(){ if(!pinned) tip.hidden=true; });
+}
+
+/* ---------- grammar sentence links ---------- */
+function setupGoto(){
+  document.addEventListener("click",function(e){
+    var a=e.target.closest("a[data-goto]"); if(!a) return;
+    var id=a.dataset.goto;
+    var rtab=document.querySelector('.tab[data-tab="reading"]');
+    var rpanel=document.getElementById("panel-reading");
+    document.querySelectorAll(".tab").forEach(function(t){t.classList.toggle("active",t===rtab)});
+    document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("active")});
+    rpanel.classList.add("active");
+    var target=document.getElementById("sent-"+id);
+    if(target) target.scrollIntoView({behavior:"smooth",block:"center"});
+  });
+}
+
+/* ---------- exercise interactions ---------- */
+function setupExercises(){
+  document.addEventListener("click",function(e){
+    var opt=e.target.closest(".opt");
+    if(opt){
+      var key=opt.dataset.key, idx=opt.dataset.idx, ex=exercises[idx];
+      if(!ex) return;
+      var correct=ex.answer&&ex.answer.key;
+      var box=document.querySelector('.answer-box[data-idx="'+idx+'"]');
+      var opts=opt.parentElement.querySelectorAll(".opt");
+      if(ex.answer&&ex.answer.key!=null){
+        opts.forEach(function(o){
+          if(o.dataset.key===correct){o.classList.add("reveal","correct")}
+          if(o===opt&&o.dataset.key!==correct){o.classList.add("wrong")}
+        });
+      }
+      if(box) box.classList.add("show");
+      return;
+    }
+    var rb=e.target.closest(".reveal-btn");
+    if(rb){var box=document.querySelector('.answer-box[data-idx="'+rb.dataset.idx+'"]'); if(box) box.classList.toggle("show");}
+  });
+}
+
+/* ---------- theme ---------- */
+function setupTheme(){
+  var btn=document.getElementById("theme-toggle");
+  function current(){
+    if(document.documentElement.dataset.theme==="dark") return "dark";
+    if(document.documentElement.dataset.theme==="light") return "light";
+    return "system";
+  }
+  function apply(){
+    var c=current();
+    btn.textContent = c==="dark" ? "☾" : c==="light" ? "☀" : "◐";
+  }
+  try{
+    var saved=localStorage.getItem("els-theme");
+    if(saved==="dark"||saved==="light") document.documentElement.dataset.theme=saved;
+  }catch(e){}
+  apply();
+  btn.addEventListener("click",function(){
+    var c=current();
+    var next = c==="system" ? "light" : c==="light" ? "dark" : "system";
+    if(next==="system") delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme=next;
+    try{ if(next==="system") localStorage.removeItem("els-theme"); else localStorage.setItem("els-theme",next);}catch(e){}
+    apply();
+  });
+}
+
+/* ---------- init ---------- */
+renderHeader();
+setupTheme();
+setupTabs();
+renderReading();
+renderAnnotated();
+renderVocabulary();
+renderExpressions();
+renderGrammar();
+renderExercises();
+renderCards();
+setupTooltip();
+setupGoto();
+setupExercises();
+})();
+</script>
+</body>
+</html>

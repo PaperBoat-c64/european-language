@@ -1,0 +1,10 @@
+{
+  "name": "high-contrast",
+  "description": "High-contrast palette for accessibility or print. Maximum distinctness between adjacent colors.",
+  "colors": [
+    "#D32F2F", "#EF6C00", "#F9A825", "#2E7D32",
+    "#00695C", "#1565C0", "#6A1B9A", "#C2185B",
+    "#00838F", "#E65100", "#283593", "#AD1457",
+    "#1B5E20", "#B71C1C", "#37474F", "#263238"
+  ]
+}
